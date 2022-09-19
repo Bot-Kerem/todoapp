@@ -6,6 +6,7 @@ body {
     background-color: #313131;
     padding: 1rem;
     margin-top: 1rem;
+    width: 50%;
 }
 
 .item{
@@ -17,4 +18,5 @@ body {
 
 .item.dragging{
     opacity: 0.5;
+    
 }

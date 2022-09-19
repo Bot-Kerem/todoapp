@@ -7,13 +7,34 @@ draggables.forEach(draggable => {
     })
 
     draggable.addEventListener('dragend', () => {
-        draggable.classList.remove('dragging')
+        draggable.classList.remove('dragging');
     })
 })
 
 containers.forEach(container => {
-    container.addEventListener('dragover', () => {
+    container.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    const afterElement = getDragAfterElement(container, event.clientY);
     const draggable = document.querySelector('.dragging');
-    container.appendChild(draggable);
+    if(afterElement == undefined) {
+        container.appendChild(draggable);
+    }
+    else {
+        container.insertBefore(draggable, afterElement);
+    }
     })
 })
+
+function getDragAfterElement(container, y) {
+    const draggableIElements = [...container.querySelectorAll('.item:not(.dragging)')];
+    return draggableIElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if(offset < 0 && offset > closest.offset){
+            return {offset: offset, element: child};
+        }
+        else {
+            return closest;
+        }
+    }, {offset: Number.NEGATIVE_INFINITY}).element;
+}
